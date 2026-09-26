@@ -8,6 +8,15 @@ const Savebutton = ({workout}) => {
  const { save, setsave } = useContext(Fitcontext);
  
    const handlefitness = () => {
+     const alreadySaved = save.find(
+      (item) => item.id === workout.id
+    );
+
+    if (alreadySaved) {
+      toast.error("Already saved for later");
+      return;
+    }
+
      setsave([...save, workout]);
       toast.success("saved for later");
    };
@@ -16,7 +25,7 @@ const Savebutton = ({workout}) => {
      <div>
        <button
          className="btn btn-outline btn-secondary text-white px-7 rounded-lg "
-         onClick={handlefitness}
+         onClick={()=>handlefitness()}
        >
          <Bookmark size={20} />
          Save for later

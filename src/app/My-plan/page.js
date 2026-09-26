@@ -134,17 +134,22 @@ const Page = () => {
 
           </div>
 
-          <select
-            value={sortby}
-            onChange={(e) => setsortby(e.target.value)}
-            className="rounded-lg border border-gray-800 bg-[#151820] px-3 py-2 text-sm text-gray-400"
-          >
-            <option value="duration">Duration</option>
-            <option value="calories">Calories</option>
-            <option value="rating">Rating</option>
-          </select>
+         <div className="flex items-center gap-4">
+  <span className="text-lg text-gray-400">
+    Sort By
+  </span>
 
-        </div>
+  <select
+    value={sortby}
+    onChange={(e) => setsortby(e.target.value)}
+    className="h-12 w-30 rounded-xl border border-[#252a35] bg-[#151820] px-4 text-base text-white outline-none"
+  >
+    <option value="duration">Duration</option>
+    <option value="calories">Calories</option>
+    <option value="rating">Rating</option>
+  </select>
+</div>
+     </div>
 
         <div className="space-y-3">
 

@@ -10,6 +10,14 @@ const Addbutton = ({ workout }) => {
   const { add, setadd } = useContext(Fitcontext);
 
   const handlefitness = () => {
+     const alreadyAdded = add.find(
+      (item) => item.id === workout.id
+    );
+
+    if (alreadyAdded) {
+      toast.error("Already in your plan");
+      return;
+    }
     setadd([...add, workout]);
     toast.success("added to today's plan");
   };
@@ -17,7 +25,7 @@ const Addbutton = ({ workout }) => {
   return (
     <div>
      <button
-  onClick={handlefitness}
+  onClick={()=>handlefitness()}
   className= "flex items-center gap-2 rounded-lg bg-yellow-400 px-5 py-2 text-black font-semibold"
 >
     <CalendarPlus size={20} />
