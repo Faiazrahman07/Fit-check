@@ -1,3 +1,5 @@
+import Addbutton from "@/app/Fitdetails/addbutton";
+import Savebutton from "@/app/Fitdetails/savebutton";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
@@ -20,10 +22,7 @@ export default async function WorkoutDetails({ params }) {
 
   const workout = workouts.find((item) => item.id === Number(id));
 
-  if (!workout) {
-    notFound();
-  }
-
+ 
   return (
     <main className="min-h-screen bg-[#0d0f13] px-6 py-8 text-white">
       <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-2">
@@ -127,13 +126,8 @@ export default async function WorkoutDetails({ params }) {
           </ol>
 
           <div className="mt-6 flex gap-3">
-            <button className="rounded-lg bg-lime-400 px-4 py-2 font-semibold text-black">
-              Add to today&apos;s plan
-            </button>
-
-            <button className="rounded-lg border border-gray-600 px-4 py-2">
-              Save for later
-            </button>
+             <Addbutton workout={workout}></Addbutton>
+              <Savebutton workout={workout}></Savebutton>
           </div>
         </div>
       </div>

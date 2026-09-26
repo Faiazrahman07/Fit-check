@@ -47,7 +47,7 @@ const Navbar = () => {
           </Link>
 
           <Link
-            href="/my-plan"
+            href="/My-plan"
             className={`rounded-full px-5 py-2 text-xs font-medium transition ${
               planActive
                 ? "bg-[#252d0a] text-lime-400"
