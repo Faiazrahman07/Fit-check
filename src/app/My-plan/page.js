@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Fitcontext } from '@/context/fitcontext';
@@ -7,11 +8,30 @@ import React, { useContext, useState } from 'react';
 
 const Page = () => {
   const { add, setadd, save, setsave } = useContext(Fitcontext);
+  const [sortby, setsortby] = useState('duration');
 
   const [activeTab, setActiveTab] = useState('today');
   const [done, setDone] = useState([]);
 
   const workouts = activeTab === 'today' ? add : save;
+
+  const sortedWorkouts = [...workouts].sort((a, b) => {
+    if (sortby === 'duration') {
+      return a.duration  - b.duration ;
+    }
+
+    if (sortby === 'rating') {
+      return a.rating - b.rating;
+    }
+
+    if (sortby === 'calories') {
+      return (
+       a.caloriesBurned -b.caloriesBurned 
+      );
+    }
+
+    return 0;
+  });
 
   const totalExercises = workouts.length;
 
@@ -26,12 +46,10 @@ const Page = () => {
     0
   );
 
- 
   const removeWorkout = (index) => {
     const newList = add.filter((_, i) => i !== index);
     setadd(newList);
   };
-
 
   const removeSavedWorkout = (index) => {
     const newList = save.filter((_, i) => i !== index);
@@ -60,7 +78,6 @@ const Page = () => {
           </p>
         </div>
 
-  
         <div className="mb-6 grid grid-cols-1 overflow-hidden rounded-xl border border-gray-800 bg-[#151820] md:grid-cols-3">
 
           <div className="border-b border-gray-800 p-6 md:border-b-0 md:border-r">
@@ -71,7 +88,6 @@ const Page = () => {
             </h2>
           </div>
 
-       
           <div className="border-b border-gray-800 p-6 md:border-b-0 md:border-r">
             <p className="text-xs text-gray-500">Minutes</p>
 
@@ -80,7 +96,6 @@ const Page = () => {
             </h2>
           </div>
 
-    
           <div className="p-6">
             <p className="text-xs text-gray-500">Calories</p>
 
@@ -91,7 +106,6 @@ const Page = () => {
 
         </div>
 
-    
         <div className="mb-4 flex items-center justify-between">
 
           <div className="flex rounded-lg border border-gray-800 bg-[#151820] p-1">
@@ -120,18 +134,21 @@ const Page = () => {
 
           </div>
 
-          <select className="rounded-lg border border-gray-800 bg-[#151820] px-3 py-2 text-sm text-gray-400">
-            <option>Duration</option>
-            <option>Calories</option>
-            <option>Rating</option>
+          <select
+            value={sortby}
+            onChange={(e) => setsortby(e.target.value)}
+            className="rounded-lg border border-gray-800 bg-[#151820] px-3 py-2 text-sm text-gray-400"
+          >
+            <option value="duration">Duration</option>
+            <option value="calories">Calories</option>
+            <option value="rating">Rating</option>
           </select>
 
         </div>
 
-      
         <div className="space-y-3">
 
-          {workouts.length === 0 ? (
+          {sortedWorkouts.length === 0 ? (
 
             <div className="flex min-h-[220px] flex-col items-center justify-center rounded-xl border border-dashed border-gray-800 bg-[#101216]">
 
@@ -154,23 +171,21 @@ const Page = () => {
 
           ) : (
 
-            workouts.map((workout, index) => (
+            sortedWorkouts.map((workout, index) => (
 
               <div
                 key={index}
                 className="flex items-center gap-4 rounded-xl border border-gray-800 bg-[#151820] p-3"
               >
 
-             
                 <Image
                   src={workout.image}
                   alt={workout.name}
                   className="h-20 w-28 rounded-lg object-cover"
-                width={112}
-  height={80}
+                  width={112}
+                  height={80}
                 />
 
-               
                 <div className="flex-1">
 
                   <h3 className="font-bold uppercase text-white">
@@ -182,18 +197,23 @@ const Page = () => {
                   </p>
 
                   <div className="mt-2 flex gap-4 text-xs text-gray-400">
-                    <span>◷ {workout.duration || 0} min</span>
+
+                    <span>
+                      ◷ {workout.duration || 0} min
+                    </span>
 
                     <span>
                       🔥 {workout.caloriesBurned ?? workout.calories ?? 0} kcal
                     </span>
 
-                    <span>☆ {workout.rating || 0}</span>
+                    <span>
+                      ☆ {workout.rating || 0}
+                    </span>
+
                   </div>
 
                 </div>
 
-            
                 <div className="flex items-center gap-2">
 
                   <Link
@@ -229,13 +249,11 @@ const Page = () => {
 
                   ) : (
 
-             
                     <button
                       onClick={() => removeSavedWorkout(index)}
                       className="rounded-full border border-red-900 px-4 py-2 text-xs text-red-400 hover:bg-red-950"
                     >
-                        ×
-                      
+                      ×
                     </button>
 
                   )}
@@ -256,3 +274,4 @@ const Page = () => {
 };
 
 export default Page;
+

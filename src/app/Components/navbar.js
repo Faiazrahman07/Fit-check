@@ -5,14 +5,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import logo from "@/assets/logo.png";
+import { Fitcontext } from "@/context/fitcontext";
+import { useContext } from "react";
 
 const Navbar = () => {
   const pathname = usePathname();
+    const { add,save } = useContext(Fitcontext);
 
   const workoutActive =
     pathname === "/" || pathname.startsWith("/workout");
 
-  const planActive = pathname === "/my-plan";
+  const planActive = pathname === "/My-plan";
 
   return (
     <nav className="border-b border-white/10 bg-[#0d0f10] text-white">
@@ -58,33 +61,32 @@ const Navbar = () => {
           </Link>
 
         </div>
+<div className="flex items-center gap-7">
 
-        <div className="flex items-center gap-5">
 
-          <Link
-            href="/my-plan"
-            className="flex items-center gap-2 text-[10px] text-gray-300"
-          >
-            <span>Plan</span>
+  <Link
+    href="/My-plan?tab=today"
+    className="flex items-center gap-2 text-sm text-gray-300"
+  >
+    <span>Plan</span>
 
-            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#ccff00] text-[9px] font-bold text-black">
-              0
-            </span>
-          </Link>
+    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-lime-400 text-xs font-bold text-black">
+      {add.length}
+    </span>
+  </Link>
 
-          <Link
-            href="/my-plan"
-            className="flex items-center gap-2 text-[10px] text-gray-400"
-          >
-            <span>Saved</span>
 
-            <span className="flex h-4 w-4 items-center justify-center rounded-full border border-white/20 text-[9px] text-gray-400">
-              0
-            </span>
-          </Link>
+  <Link
+    href="/My-plan?tab=saved"
+    className="flex items-center gap-2 text-sm text-gray-400"
+  >
+    <span>Saved</span>
 
-        </div>
-
+    <span className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-700 text-xs text-gray-300">
+      {save.length}
+    </span>
+  </Link>
+</div>
       </div>
     </nav>
   );
