@@ -1,5 +1,7 @@
+export const dynamic = "force-dynamic";
 import React from 'react';
 import Banner from '../Components/Homepage/Banner';
+
 
 import Fitcheck from '../Components/Homepage/Fitcheck';
 
