@@ -9,7 +9,7 @@ const getWorkout = async () => {
   });
 
   if (!res.ok) {
-    throw new Error("Failed to fetch workout data");
+       notFound();
   }
 
   return res.json();
