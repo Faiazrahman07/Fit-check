@@ -17,7 +17,7 @@ const Footer = () => {
         />
 
         <p className="text-[9px] text-gray-500">
-          © {new Date().getFullYear()} FitLog. All rights reserved.
+         © 2026 FitLog — Workout Library. Train hard, log honest
         </p>
 
       </div>
