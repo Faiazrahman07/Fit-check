@@ -1,8 +1,10 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 
 const Fitcheckcard = ({ Fit }) => {
   return (
+        <Link href={`/workout/${Fit.id}`}>
     <div className="bg-[#151820] rounded-xl overflow-hidden border border-[#252a33]">
 
       
@@ -51,7 +53,10 @@ const Fitcheckcard = ({ Fit }) => {
 
       </div>
     </div>
+     </Link>
   );
+ 
 };
+
 
 export default Fitcheckcard;
