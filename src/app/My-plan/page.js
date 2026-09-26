@@ -5,33 +5,60 @@ import { Fitcontext } from '@/context/fitcontext';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useContext, useState } from 'react';
+import { toast } from 'react-toastify';
+
 
 const Page = () => {
   const { add, setadd, save, setsave } = useContext(Fitcontext);
-  const [sortby, setsortby] = useState('duration');
 
+  const [sortby, setsortby] = useState('duration');
   const [activeTab, setActiveTab] = useState('today');
   const [done, setDone] = useState([]);
 
   const workouts = activeTab === 'today' ? add : save;
 
+  
   const sortedWorkouts = [...workouts].sort((a, b) => {
     if (sortby === 'duration') {
-      return a.duration  - b.duration ;
+      return a.duration - b.duration;
+    }
+
+    if (sortby === 'calories') {
+      return a.caloriesBurned - b.caloriesBurned;
     }
 
     if (sortby === 'rating') {
       return a.rating - b.rating;
     }
 
-    if (sortby === 'calories') {
-      return (
-       a.caloriesBurned -b.caloriesBurned 
-      );
-    }
-
     return 0;
   });
+
+
+  const removeWorkout = (id) => {
+    setadd(add.filter((workout) => workout.id !== id));
+
+    setDone((prev) => prev.filter((item) => item !== id));
+
+    toast.success('Removed from today’s plan');
+  };
+
+  const removeSavedWorkout = (id) => {
+    setsave(save.filter((workout) => workout.id !== id));
+
+    toast.success('Removed from saved');
+  };
+
+
+  const markDone = (id) => {
+    if (done.includes(id)) {
+      setDone(done.filter((item) => item !== id));
+      toast.success('Workout marked as not done');
+    } else {
+      setDone([...done, id]);
+      toast.success('Workout marked as done');
+    }
+  };
 
   const totalExercises = workouts.length;
 
@@ -46,28 +73,11 @@ const Page = () => {
     0
   );
 
-  const removeWorkout = (index) => {
-    const newList = add.filter((_, i) => i !== index);
-    setadd(newList);
-  };
-
-  const removeSavedWorkout = (index) => {
-    const newList = save.filter((_, i) => i !== index);
-    setsave(newList);
-  };
-
-  const markDone = (index) => {
-    setDone((prev) =>
-      prev.includes(index)
-        ? prev.filter((i) => i !== index)
-        : [...prev, index]
-    );
-  };
-
   return (
     <div className="min-h-screen bg-black">
       <div className="container mx-auto px-6 py-10">
 
+        
         <div className="mb-6">
           <h1 className="text-3xl font-bold uppercase text-white">
             My Plan
@@ -78,10 +88,13 @@ const Page = () => {
           </p>
         </div>
 
+      
         <div className="mb-6 grid grid-cols-1 overflow-hidden rounded-xl border border-gray-800 bg-[#151820] md:grid-cols-3">
 
           <div className="border-b border-gray-800 p-6 md:border-b-0 md:border-r">
-            <p className="text-xs text-gray-500">Exercises</p>
+            <p className="text-xs text-gray-500">
+              Exercises
+            </p>
 
             <h2 className="mt-1 text-3xl font-bold text-lime-400">
               {totalExercises}
@@ -89,7 +102,9 @@ const Page = () => {
           </div>
 
           <div className="border-b border-gray-800 p-6 md:border-b-0 md:border-r">
-            <p className="text-xs text-gray-500">Minutes</p>
+            <p className="text-xs text-gray-500">
+              Minutes
+            </p>
 
             <h2 className="mt-1 text-3xl font-bold text-white">
               {totalMinutes}
@@ -97,7 +112,9 @@ const Page = () => {
           </div>
 
           <div className="p-6">
-            <p className="text-xs text-gray-500">Calories</p>
+            <p className="text-xs text-gray-500">
+              Calories
+            </p>
 
             <h2 className="mt-1 text-3xl font-bold text-white">
               {totalCalories}
@@ -106,8 +123,10 @@ const Page = () => {
 
         </div>
 
-        <div className="mb-4 flex items-center justify-between">
+    
+        <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
+          
           <div className="flex rounded-lg border border-gray-800 bg-[#151820] p-1">
 
             <button
@@ -134,27 +153,31 @@ const Page = () => {
 
           </div>
 
-         <div className="flex items-center gap-4">
-  <span className="text-lg text-gray-400">
-    Sort By
-  </span>
+          
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-gray-400">
+              Sort By
+            </span>
 
-  <select
-    value={sortby}
-    onChange={(e) => setsortby(e.target.value)}
-    className="h-12 w-30 rounded-xl border border-[#252a35] bg-[#151820] px-4 text-base text-white outline-none"
-  >
-    <option value="duration">Duration</option>
-    <option value="calories">Calories</option>
-    <option value="rating">Rating</option>
-  </select>
-</div>
-     </div>
+            <select
+              value={sortby}
+              onChange={(e) => setsortby(e.target.value)}
+              className="h-11 rounded-xl border border-[#252a35] bg-[#151820] px-4 text-sm text-white outline-none"
+            >
+              <option value="duration">Duration</option>
+              <option value="calories">Calories</option>
+              <option value="rating">Rating</option>
+            </select>
+          </div>
 
+        </div>
+
+   
         <div className="space-y-3">
 
           {sortedWorkouts.length === 0 ? (
 
+       
             <div className="flex min-h-[220px] flex-col items-center justify-center rounded-xl border border-dashed border-gray-800 bg-[#101216]">
 
               <h2 className="text-lg font-bold uppercase text-white">
@@ -166,7 +189,7 @@ const Page = () => {
               </p>
 
               <Link
-                href="/workout/"
+                href="/workout"
                 className="mt-5 rounded-full bg-lime-400 px-5 py-2 text-sm font-semibold text-black"
               >
                 Go to workouts
@@ -176,21 +199,23 @@ const Page = () => {
 
           ) : (
 
-            sortedWorkouts.map((workout, index) => (
+            sortedWorkouts.map((workout) => (
 
               <div
-                key={index}
-                className="flex items-center gap-4 rounded-xl border border-gray-800 bg-[#151820] p-3"
+                key={workout.id}
+                className="flex flex-col gap-4 rounded-xl border border-gray-800 bg-[#151820] p-3 sm:flex-row sm:items-center"
               >
 
+     
                 <Image
                   src={workout.image}
                   alt={workout.name}
-                  className="h-20 w-28 rounded-lg object-cover"
+                  className="h-40 w-full rounded-lg object-cover sm:h-20 sm:w-28"
                   width={112}
                   height={80}
                 />
 
+             
                 <div className="flex-1">
 
                   <h3 className="font-bold uppercase text-white">
@@ -201,7 +226,7 @@ const Page = () => {
                     {workout.equipment}
                   </p>
 
-                  <div className="mt-2 flex gap-4 text-xs text-gray-400">
+                  <div className="mt-2 flex flex-wrap gap-4 text-xs text-gray-400">
 
                     <span>
                       ◷ {workout.duration || 0} min
@@ -219,7 +244,8 @@ const Page = () => {
 
                 </div>
 
-                <div className="flex items-center gap-2">
+          
+                <div className="flex flex-wrap items-center gap-2">
 
                   <Link
                     href={`/workout/${workout.id}`}
@@ -232,21 +258,21 @@ const Page = () => {
 
                     <>
                       <button
-                        onClick={() => markDone(index)}
+                        onClick={() => markDone(workout.id)}
                         className={`rounded-full px-4 py-2 text-xs font-semibold ${
-                          done.includes(index)
+                          done.includes(workout.id)
                             ? 'bg-gray-700 text-gray-300'
                             : 'bg-lime-400 text-black'
                         }`}
                       >
-                        {done.includes(index)
+                        {done.includes(workout.id)
                           ? '✓ Done'
                           : '✓ Mark as Done'}
                       </button>
 
                       <button
-                        onClick={() => removeWorkout(index)}
-                        className="px-2 text-xl text-gray-500 hover:text-white"
+                        onClick={() => removeWorkout(workout.id)}
+                        className="px-2 text-xl text-gray-500 hover:text-red-400"
                       >
                         ×
                       </button>
@@ -255,7 +281,7 @@ const Page = () => {
                   ) : (
 
                     <button
-                      onClick={() => removeSavedWorkout(index)}
+                      onClick={() => removeSavedWorkout(workout.id)}
                       className="rounded-full border border-red-900 px-4 py-2 text-xs text-red-400 hover:bg-red-950"
                     >
                       ×
@@ -279,4 +305,3 @@ const Page = () => {
 };
 
 export default Page;
-
